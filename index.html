@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUNVERSE - Play & Smile</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  background: linear-gradient(135deg,#a18cd1,#fbc2eb,#84fab0);
+  background-size: 300% 300%;
+  animation: backgroundMove 12s infinite alternate;
+  min-height: 100vh;
+  color: #292344;
+}
+
+@keyframes backgroundMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+header {
+  text-align: center;
+  padding: 30px 15px 20px;
+}
+
+.logo {
+  font-size: clamp(35px,8vw,65px);
+  font-weight: 1000;
+  color: white;
+  text-shadow: 3px 5px 0 #7152bb;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  margin-top: 10px;
+  font-size: 17px;
+  color: #49336d;
+}
+
+.mascot {
+  font-size: 55px;
+  animation: bounce 2s infinite;
+  display: inline-block;
+}
+
+@keyframes bounce {
+  50% { transform: translateY(-12px) rotate(8deg); }
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 15px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 25px;
+  margin: 20px 0;
+}
+
+.mode {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.mode button {
+  margin: 5px;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 25px;
+  background: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.mode button.active {
+  background: #6441a5;
+  color: white;
+}
+
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+  gap: 18px;
+}
+
+.game-card {
+  background: rgba(255,255,255,.85);
+  padding: 23px;
+  text-align: center;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px #59427b33;
+  transition: .25s;
+  border: 3px solid transparent;
+}
+
+.game-card:hover {
+  transform: translateY(-8px) rotate(-1deg);
+  border-color: white;
+}
+
+.game-icon {
+  font-size: 55px;
+  margin-bottom: 10px;
+}
+
+.game-card h3 {
+  margin-bottom: 8px;
+}
+
+.game-card p {
+  font-size: 13px;
+  color: #665c76;
+}
+
+.play-area {
+  display: none;
+  background: white;
+  border-radius: 25px;
+  padding: 25px;
+  margin-top: 25px;
+  text-align: center;
+  box-shadow: 0 8px 25px #49336d33;
+}
+
+.play-area h2 {
+  margin-bottom: 15px;
+}
+
+.game-content {
+  padding: 15px 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+.action {
+  background: #7553c7;
+  color: white;
+  border: none;
+  padding: 13px 22px;
+  margin: 8px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.action:hover {
+  transform: scale(1.07);
+  background: #50318e;
+}
+
+.back {
+  background: #ff739b;
+}
+
+.result {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 18px;
+  min-height: 30px;
+}
+
+.big {
+  font-size: 65px;
+  margin: 15px;
+}
+
+input {
+  padding: 13px;
+  width: 180px;
+  border: 2px solid #a18cd1;
+  border-radius: 12px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4,65px);
+  gap: 9px;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.memory-card {
+  height: 65px;
+  background: #a18cd1;
+  border-radius: 12px;
+  font-size: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.memory-card.open {
+  background: #ffe2a8;
+}
+
+.ttt-grid {
+  display: grid;
+  grid-template-columns: repeat(3,85px);
+  gap: 8px;
+  justify-content: center;
+  margin: 20px;
+}
+
+.ttt-cell {
+  width: 85px;
+  height: 85px;
+  font-size: 40px;
+  font-weight: bold;
+  border: none;
+  border-radius: 15px;
+  background: #e9dcff;
+  cursor: pointer;
+}
+
+.ttt-cell:hover {
+  background: #d2bbff;
+}
+
+#reactionBox {
+  background: #ff8c8c;
+  padding: 45px 10px;
+  border-radius: 20px;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 35px 10px;
+  font-size: 14px;
+}
+
+.emoji {
+  position: fixed;
+  pointer-events: none;
+  animation: floatUp 3s linear forwards;
+  z-index: 10;
+  font-size: 25px;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@media(max-width:450px) {
+  .memory-grid {
+    grid-template-columns: repeat(4,58px);
+  }
+  .memory-card {
+    height: 58px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="mascot">🦄</div>
+  <div class="logo">FUNVERSE</div>
+  <p class="subtitle">Your little universe of fun! 🌈</p>
+</header>
+
+<div class="container">
+
+  <h2 class="section-title">✨ Choose Your Adventure ✨</h2>
+
+  <div class="mode">
+    <button class="active" id="soloBtn" onclick="setMode('solo')">
+      👤 Single Player
+    </button>
+    <button id="duoBtn" onclick="setMode('duo')">
+      👥 Two Players
+    </button>
+  </div>
+
+  <div class="games" id="gameList">
+
+    <div class="game-card" data-mode="solo" onclick="startGame('memory')">
+      <div class="game-icon">🧠</div>
+      <h3>Memory Match</h3>
+      <p>Find matching cartoon emojis!</p>
+    </div>
+
+    <div class="game-card" data-mode="duo" onclick="startGame('ttt')">
+      <div class="game-icon">❌</div>
+      <h3>Tic-Tac-Toe</h3>
+      <p>Challenge your friend!</p>
+    </div>
+
+    <div class="game-card" data-mode="solo" onclick="startGame('guess')">
+      <div class="game-icon">🔢</div>
+      <h3>Number Detective</h3>
+      <p>Find the secret number!</p>
+    </div>
+
+    <div class="game-card" data-mode="solo" onclick="startGame('reaction')">
+      <div class="game-icon">⚡</div>
+      <h3>Reaction Rush</h3>
+      <p>Test your lightning speed!</p>
+    </div>
+
+    <div class="game-card" data-mode="duo" onclick="startGame('spinner')">
+      <div class="game-icon">🎡</div>
+      <h3>Crazy Spinner</h3>
+      <p>Random funny challenges!</p>
+    </div>
+
+    <div class="game-card" data-mode="duo" onclick="startGame('questions')">
+      <div class="game-icon">😂</div>
+      <h3>Crazy Questions</h3>
+      <p>Discover hilarious answers!</p>
+    </div>
+
+  </div>
+
+  <div class="play-area" id="playArea">
+    <h2 id="gameTitle">Game</h2>
+    <div class="game-content" id="gameContent"></div>
+    <button class="action back" onclick="goHome()">⬅ Back to Arcade</button>
+  </div>
+
+</div>
+
+<footer>
+  Made with 💜 for people who love having fun!
+  <br><br>FUNVERSE © 2026
+</footer>
+
+<script>
+let mode = "solo";
+let timer = null;
+let gameState = {};
+
+function sound(freq=500) {
+  try {
+    const audio = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audio.createOscillator();
+    const gain = audio.createGain();
+    oscillator.frequency.value = freq;
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    gain.gain.value = 0.06;
+    oscillator.start();
+    gain.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.15);
+    oscillator.stop(audio.currentTime+.15);
+  } catch(e) {}
+}
+
+function setMode(value) {
+  mode = value;
+
+  document.getElementById("soloBtn").classList.toggle("active",value==="solo");
+  document.getElementById("duoBtn").classList.toggle("active",value==="duo");
+
+  document.querySelectorAll(".game-card").forEach(card => {
+    card.style.display = card.dataset.mode === value ? "block" : "none";
+  });
+
+  goHome();
+}
+
+function startGame(game) {
+  clearTimeout(timer);
+  document.getElementById("gameList").style.display="none";
+  document.getElementById("playArea").style.display="block";
+
+  const titles = {
+    memory:"🧠 Memory Match",
+    ttt:"❌ Tic-Tac-Toe",
+    guess:"🔢 Number Detective",
+    reaction:"⚡ Reaction Rush",
+    spinner:"🎡 Crazy Spinner",
+    questions:"😂 Crazy Questions"
+  };
+
+  document.getElementById("gameTitle").innerText=titles[game];
+  const content=document.getElementById("gameContent");
+  content.innerHTML="";
+
+  if(game==="memory") memoryGame();
+  if(game==="ttt") ticTacToe();
+  if(game==="guess") guessGame();
+  if(game==="reaction") reactionGame();
+  if(game==="spinner") spinnerGame();
+  if(game==="questions") questionGame();
+}
+
+function goHome() {
+  clearTimeout(timer);
+  document.getElementById("playArea").style.display="none";
+  document.getElementById("gameList").style.display="grid";
+}
+
+function celebration() {
+  const emojis=["🎉","🎈","✨","💖","🌟","🥳"];
+  for(let i=0;i<25;i++) {
+    const el=document.createElement("div");
+    el.className="emoji";
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left=Math.random()*100+"vw";
+    el.style.bottom="-30px";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3000);
+  }
+  sound(800);
+}
+
+// MEMORY GAME
+function memoryGame() {
+  const emojis=["🐼","🐸","🦊","🐱","🐵","🐰","🐼","🐸","🦊","🐱","🐵","🐰"];
+  emojis.sort(()=>Math.random()-.5);
+
+  let first=null, lock=false, matches=0, moves=0;
+  const c=document.getElementById("gameContent");
+
+  c.innerHTML="<p>Find all 6 matching pairs!</p><p id='moves'>Moves: 0</p><div class='memory-grid' id='memoryGrid'></div><div class='result' id='memoryResult'></div>";
+
+  emojis.forEach((emoji,i)=>{
+    const b=document.createElement("button");
+    b.className="memory-card";
+    b.textContent="❔";
+
+    b.onclick=()=>{
+      if(lock || b.classList.contains("open") || b.dataset.done) return;
+
+      b.textContent=emoji;
+      b.classList.add("open");
+      sound();
+
+      if(!first) {
+        first=b;
+      } else {
+        moves++;
+        document.getElementById("moves").textContent="Moves: "+moves;
+
+        if(first.textContent===b.textContent) {
+          first.dataset.done="true";
+          b.dataset.done="true";
+          matches++;
+          first=null;
+
+          if(matches===6) {
+            document.getElementById("memoryResult").textContent="Amazing! You won! 🏆";
+            celebration();
+          }
+        } else {
+          lock=true;
+          const previous=first;
+          first=null;
+          setTimeout(()=>{
+            previous.textContent="❔";
+            b.textContent="❔";
+            previous.classList.remove("open");
+            b.classList.remove("open");
+            lock=false;
+          },750);
+        }
+      }
+    };
+
+    document.getElementById("memoryGrid").appendChild(b);
+  });
+}
+
+// TIC TAC TOE
+function ticTacToe() {
+  let board=Array(9).fill("");
+  let turn="X";
+  let finished=false;
+
+  const c=document.getElementById("gameContent");
+
+  c.innerHTML="<p>Player 1: ❌ | Player 2: ⭕</p><p id='tttTurn' class='result'>Player X's turn</p><div class='ttt-grid' id='tttGrid'></div><p id='tttResult' class='result'></p><button class='action' onclick='startGame(\"ttt\")'>🔄 Restart</button>";
+
+  const grid=document.getElementById("tttGrid");
+
+  const wins=[
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  board.forEach((_,i)=>{
+    const b=document.createElement("button");
+    b.className="ttt-cell";
+
+    b.onclick=()=>{
+      if(board[i] || finished) return;
+
+      board[i]=turn;
+      b.textContent=turn==="X"?"❌":"⭕";
+      sound();
+
+      const won=wins.some(line=>line.every(index=>board[index]===turn));
+
+      if(won) {
+        finished=true;
+        document.getElementById("tttResult").textContent="Player "+turn+" wins! 🏆";
+        celebration();
+      } else if(board.every(Boolean)) {
+        finished=true;
+        document.getElementById("tttResult").textContent="It's a draw! 🤝";
+      } else {
+        turn=turn==="X"?"O":"X";
+        document.getElementById("tttTurn").textContent="Player "+turn+"'s turn";
+      }
+    };
+
+    grid.appendChild(b);
+  });
+}
+
+// NUMBER GUESS
+function guessGame() {
+  const secret=Math.floor(Math.random()*100)+1;
+  let attempts=0;
+
+  document.getElementById("gameContent").innerHTML=`
+    <div class="big">🕵️</div>
+    <p>I'm thinking of a number between 1 and 100!</p>
+    <br>
+    <input id="guessInput" type="number" min="1" max="100" placeholder="Your guess">
+    <br>
+    <button class="action" onclick="checkGuess()">Guess!</button>
+    <p id="guessResult" class="result"></p>
+    <p id="guessAttempts">Attempts: 0</p>
+    <button class="action" onclick="startGame('guess')">New Number</button>
+  `;
+
+  window.checkGuess=function() {
+    const value=Number(document.getElementById("guessInput").value);
+    const result=document.getElementById("guessResult");
+
+    if(!Number.isInteger(value) || value<1 || value>100) {
+      result.textContent="Enter a number from 1 to 100!";
+      return;
+    }
+
+    attempts++;
+
+    if(value===secret) {
+      result.textContent="CORRECT! You're a genius! 🎉";
+      celebration();
+    } else {
+      result.textContent=value<secret?"Too LOW! ⬆️":"Too HIGH! ⬇️";
+      sound(300);
+    }
+
+    document.getElementById("guessAttempts").textContent="Attempts: "+attempts;
+  };
+}
+
+// REACTION GAME
+function reactionGame() {
+  const c=document.getElementById("gameContent");
+
+  c.innerHTML=`
+    <p>Wait for GREEN, then tap as fast as you can!</p>
+    <br>
+    <div id="reactionBox">Tap START to begin!</div>
+    <p class="result" id="reactionResult"></p>
+    <button class="action" id="reactionStart">START</button>
+  `;
+
+  let state="idle",start=0;
+
+  const box=document.getElementById("reactionBox");
+  const button=document.getElementById("reactionStart");
+  const result=document.getElementById("reactionResult");
+
+  button.onclick=()=>{
+    if(state!=="idle") return;
+
+    state="waiting";
+    box.style.background="#ff9c58";
+    box.textContent="Wait for GREEN... 👀";
+    result.textContent="";
+
+    timer=setTimeout(()=>{
+      state="ready";
+      start=performance.now();
+      box.style.background="#36b86c";
+      box.textContent="TAP NOW! 🟢";
+      sound(900);
+    },1500+Math.random()*3000);
+  };
+
+  box.onclick=()=>{
+    if(state==="waiting") {
+      clearTimeout(timer);
+      state="idle";
+      box.style.background="#ff8c8c";
+      box.textContent="Too early! 😂";
+      result.textContent="False start! Try again.";
+    } else if(state==="ready") {
+      const time=Math.round(performance.now()-start);
+      state="idle";
+      box.style.background="#7553c7";
+      box.textContent="Your reaction: "+time+" ms";
+      result.textContent=time<250?"Lightning fast! ⚡":time<400?"Great reflexes! 😎":"You can do better! 😁";
+      celebration();
+    }
+  };
+}
+
+// CRAZY SPINNER
+function spinnerGame() {
+  const challenges=[
+    "Talk like a robot for 1 minute 🤖",
+    "Send your funniest selfie 😂",
+    "Sing a song in a cartoon voice 🎤",
+    "Do your best villain laugh 😈",
+    "Describe your partner using only emojis 💖",
+    "Dance without music for 20 seconds 💃",
+    "Invent a new superhero name 🦸",
+    "Speak in rhymes for 1 minute 🎭",
+    "Tell a completely random fact 🧠",
+    "Act like a chicken for 15 seconds 🐔",
+    "Make the funniest tongue twister 👅",
+    "Give your partner a silly nickname 🥰",
+    "Pretend you are an alien visiting Earth 👽",
+    "Say the alphabet backwards 🔤",
+    "Make up a dramatic movie dialogue 🎬"
+  ];
+
+  document.getElementById("gameContent").innerHTML=`
+    <div class="big" id="spinnerEmoji">🎡</div>
+    <h3>Who's feeling lucky?</h3>
+    <p id="spinnerResult" class="result">Spin to get a crazy challenge!</p>
+    <button class="action" id="spinButton">SPIN! 🎯</button>
+  `;
+
+  document.getElementById("spinButton").onclick=()=>{
+    const btn=document.getElementById("spinButton");
+    const result=document.getElementById("spinnerResult");
+    btn.disabled=true;
+    document.getElementById("spinnerEmoji").style.transform="rotate(720deg)";
+    result.textContent="Spinning...";
+
+    setTimeout(()=>{
+      result.textContent=challenges[Math.floor(Math.random()*challenges.length)];
+      btn.disabled=false;
+      document.getElementById("spinnerEmoji").style.transform="";
+      celebration();
+    },900);
+  };
+}
+
+// CRAZY QUESTIONS
+function questionGame() {
+  const questions=[
+    "If animals could talk, which one would be the rudest? 🐒",
+    "Would you rather fight 100 duck-sized horses or one horse-sized duck? 🦆",
+    "If you became invisible for a day, what would you do? 👻",
+    "Which fictional character would be the worst roommate? 🏠",
+    "If you had to marry a food, which food would you choose? 🍕",
+    "Would you rather have spaghetti hair or popcorn teeth? 🍝",
+    "If your life was a movie, what would its ridiculous title be? 🎬",
+    "Which superpower would be completely useless? 🦸",
+    "If aliens kidnapped you, what would you teach them first? 👽",
+    "Would you rather sneeze glitter or cry chocolate? ✨",
+    "If you could replace all traffic lights with something, what would it be? 🚦",
+    "What would you do if your pet started judging your life choices? 🐱",
+    "If you could make one ridiculous law, what would it be? 📜",
+    "Which cartoon character would survive a zombie apocalypse? 🧟",
+    "If your phone could expose one embarrassing secret, what would it reveal? 📱",
+    "Would you rather have a permanent clown nose or permanent squeaky shoes? 🤡",
+    "If you opened a restaurant for aliens, what would you serve? 🍔",
+    "What is the weirdest thing you would do for one million rupees? 💰",
+    "If your shadow could talk, what would it complain about? 🌚",
+    "Would you rather live in a world made of cake or chocolate? 🍫"
+  ];
+
+  let remaining=[...questions];
+
+  document.getElementById("gameContent").innerHTML=`
+    <div class="big">🎤</div>
+    <p>Take turns answering these crazy questions!</p>
+    <p class="result" id="questionResult">Ready for a random question?</p>
+    <button class="action" id="questionButton">NEXT QUESTION ➡️</button>
+  `;
+
+  document.getElementById("questionButton").onclick=()=>{
+    if(remaining.length===0) remaining=[...questions];
+
+    const index=Math.floor(Math.random()*remaining.length);
+    document.getElementById("questionResult").textContent=remaining.splice(index,1)[0];
+    sound(600);
+  };
+}
+
+// FLOATING DECORATIONS
+setInterval(()=>{
+  const el=document.createElement("div");
+  el.className="emoji";
+  el.textContent=["⭐","💜","🌸","✨","☁️"][Math.floor(Math.random()*5)];
+  el.style.left=Math.random()*100+"vw";
+  el.style.bottom="-30px";
+  el.style.opacity=".5";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+},1800);
+
+</script>
+</body>
+</html>
